@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.westernacher.account.exception.InvalidIdException;
 import com.westernacher.account.model.Account;
 import com.westernacher.account.repository.AccountsRepository;
 
@@ -25,7 +26,10 @@ public class SpringDataAccountService implements AccountService {
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Integer id) throws InvalidIdException {
+		if (!crud.exists(id)) {
+			throw new InvalidIdException("An account with this id does not exist in the database.");
+		}
 		crud.delete(id);
 	}
 

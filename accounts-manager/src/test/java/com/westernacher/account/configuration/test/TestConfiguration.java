@@ -14,10 +14,10 @@ import com.westernacher.account.service.SpringDataAccountService;
 @Configuration
 public class TestConfiguration {
 
-	@Bean
-	public AccountService getAccountService() {
-		return new SpringDataAccountService();
-	}
+//	@Bean
+//	public AccountService getAccountService() {
+//		return new SpringDataAccountService();
+//	}
 
 	@Bean
 	public DataSource dataSource() {

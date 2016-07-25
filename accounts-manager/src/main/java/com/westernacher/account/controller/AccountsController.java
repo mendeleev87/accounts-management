@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.westernacher.account.exception.InvalidIdException;
 import com.westernacher.account.model.Account;
 import com.westernacher.account.service.AccountService;
 
@@ -43,7 +44,7 @@ public class AccountsController {
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public void addAccount(@PathVariable Integer id) {
+	public void deleteAccount(@PathVariable Integer id) throws InvalidIdException {
 		accountService.delete(id);
 	}
 }
