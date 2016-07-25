@@ -1,0 +1,168 @@
+<div ng-controller="ListAccountsCtrl" class="container">
+	<div class="row col-md-10">
+		<table class="table">
+			<tr>
+				<th>
+					<a href="#/" ng-click="sortType = 'a.id'; sortReverse = !sortReverse">Id
+						<span ng-show="sortType == 'a.id' && sortReverse" class="fa fa-caret-down"></span>
+	       				<span ng-show="sortType == 'a.id' && !sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th>
+					<a href="#/" ng-click="sortType = 'a.firstName'; sortReverse = !sortReverse">First Name
+						<span ng-show="sortType == 'a.firstName' && !sortReverse" class="fa fa-caret-down"></span>
+	       				<span ng-show="sortType == 'a.firstName' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th>
+					<a href="#/" ng-click="sortType = 'a.lastName'; sortReverse = !sortReverse">Last Name
+						<span ng-show="sortType == 'a.lastName' && !sortReverse" class="fa fa-caret-down"></span>
+	       				<span ng-show="sortType == 'a.lastName' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th>
+					<a href="#/" ng-click="sortType = 'a.email'; sortReverse = !sortReverse">Email
+						<span ng-show="sortType == 'a.email' && !sortReverse" class="fa fa-caret-down"></span>
+	       				<span ng-show="sortType == 'a.email' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th>
+					<a href="#/" ng-click="sortType = 'a.dateOfBirth'; sortReverse = !sortReverse">Date of Birth
+						<span ng-show="sortType == 'a.dateOfBirth' && !sortReverse" class="fa fa-caret-down"></span>
+	       				<span ng-show="sortType == 'a.dateOfBirth' && sortReverse" class="fa fa-caret-up"></span>
+					</a>
+				</th>
+				<th></th>
+			</tr>
+			<tr ng-repeat="a in accounts | orderBy:sortType:sortReverse">
+				<td>
+					<span ng-bind="a.id"></span>
+				</td>
+				<td>
+					<a href="#/">
+						<span class="col-xs-8 text-info unstyled" ng-click="editingFN = true; $scope.temp = a.firstName" 
+							ng-hide="editingFN" ng-bind="a.firstName"></span> 
+					</a>
+					<div class="col-xs-8" ng-show="editingFN">
+						<input class="form-control" ng-model="a.firstName"  />
+					</div>
+					<a href="#/">
+						<span class="glyphicon glyphicon-ok text-success" 
+							ng-show="editingFN" ng-click="updateAccount(a); editingFN = false"></span>
+					</a>
+					<a href="#/">
+						<span class="fa fa-ban text-danger"  
+							ng-show="editingFN" ng-click="editingFN = false; a.firstName = $scope.temp"></span>
+					</a>
+				</td>
+				<td>
+					<a href="#/">
+						<span class="col-xs-8 text-info unstyled" ng-click="editingLN = true; $scope.temp = a.lastName" 
+							ng-hide="editingLN" ng-bind="a.lastName"></span> 
+					</a>
+					<div class="col-xs-8" ng-show="editingLN">
+						<input class="form-control" ng-model="a.lastName"  />
+					</div>
+					<a href="#/">
+						<span class="glyphicon glyphicon-ok text-success" 
+							ng-show="editingLN" ng-click="updateAccount(a); editingLN = false"></span>
+					</a>
+					<a href="#/">
+						<span class="fa fa-ban text-danger"  
+							ng-show="editingLN" ng-click="editingLN = false; a.lastName = $scope.temp"></span>
+					</a>
+				</td>
+				<td>
+					<form name="emailForm">
+						<a href="#/">
+							<span class="col-xs-8 text-info unstyled" ng-click="editingEmail = true; $scope.temp = a.email" 
+								ng-hide="editingEmail" ng-bind="a.email"></span> 
+						</a>
+						<div class="col-xs-8" ng-show="editingEmail">
+							<input name="emailInput" type=email class="form-control" ng-model="a.email" novalidate/>
+						</div>
+						<a href="#/">
+							<span type="submit" class="glyphicon glyphicon-ok text-success" 
+								ng-show="editingEmail" 
+								ng-click="updateAccountIfValid(a, emailForm.emailInput.$valid); 
+									editingEmail = false || emailForm.emailInput.$invalid"></span>
+						</a>
+						<a href="#/">
+							<span class="fa fa-ban text-danger"  
+								ng-show="editingEmail" ng-click="editingEmail = false; a.email = $scope.temp"></span>
+						</a>
+						<div class="alert alert-warning" ng-show="editingEmail && emailForm.emailInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid email!
+						</div>
+					</form>
+				</td>
+				<td>
+					<form name="dateForm">
+						<a href="#/">
+							<span class="col-xs-8 text-info unstyled" ng-click="editingDOB = true; $scope.temp = a.dateOfBirth" 
+								ng-hide="editingDOB" ng-bind="a.dateOfBirth | date:'dd/MM/yyyy'"></span> 
+						</a>
+						<div class="col-xs-8" ng-show="editingDOB">
+							<input name="dateInput" class="form-control" date-validate date-filter ng-model="a.dateOfBirth"  />
+						</div>
+						<a href="#/">
+							<span class="glyphicon glyphicon-ok text-success" 
+								ng-show="editingDOB" 
+								ng-click="updateAccountIfValid(a, dateForm.dateInput.$valid); 
+								editingDOB = false || dateForm.dateInput.$invalid"></span>
+						</a>
+						<a href="#/">
+							<span class="fa fa-ban text-danger"  
+								ng-show="editingDOB" ng-click="editingDOB = false; a.dateOfBirth = $scope.temp"></span>
+						</a>
+						<div class="alert alert-warning" ng-show="editingDOB && dateForm.dateInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid date!
+						</div>
+					</form>
+				</td>
+				
+				<td>
+					<a href="#/"><span class="fa fa-trash text-danger" ng-click="deleteAccount(a.id)"></span></a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<input class="form-control" ng-model="firstName" />
+				</td>
+				<td><input class="form-control" ng-model="lastName" /></td>
+				<td>
+					<form name="newAccEmailForm">
+						<input name="newAccountEmailInput" class="form-control" type="email" ng-model="email" novalidate/>
+						<div class="alert alert-warning" ng-show="newAccEmailForm.newAccountEmailInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid email!
+						</div>
+					</form>
+				</td>
+				<td>
+					<form name="newAccDateForm">
+						<input id="newAccDate" name="newAccountDateInput" class="form-control" date-filter 
+							date-validate ng-model="dateOfBirth" />
+						<div class="alert alert-warning" ng-show="newAccDateForm.newAccountDateInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid date!
+						</div>
+					</form>
+				</td>
+				<td>
+					<a href="#/">
+						<span class="glyphicon glyphicon-ok text-success" 
+							ng-click="createAccount(newAccEmailForm.newAccountEmailInput.$valid 
+								&& newAccDateForm.newAccountDateInput.$valid)"></span>
+					</a>
+					<a href="#/"><span class="fa fa-undo text-danger" ng-click="clearModel()"></span></a>
+				</td>
+			</tr>
+			
+	
+		</table>
+	</div>
+</div>
