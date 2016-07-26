@@ -27,10 +27,28 @@ public class SpringDataAccountService implements AccountService {
 
 	@Override
 	public void delete(Integer id) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		crud.delete(id);
+	}
+
+	
+
+	@Override
+	public Account update(Integer id, Account existingAccount) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		return crud.save(existingAccount);
+	}
+
+	@Override
+	public void updateField(Integer id, String field, Object newValue) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		crud.setAccountField(id, field, newValue);
+	}
+	
+	private void checkIfIdExistsOrThrow(Integer id) throws InvalidIdException {
 		if (!crud.exists(id)) {
 			throw new InvalidIdException("An account with this id does not exist in the database.");
 		}
-		crud.delete(id);
 	}
 
 }

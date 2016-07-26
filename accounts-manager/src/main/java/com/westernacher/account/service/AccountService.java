@@ -13,4 +13,8 @@ public interface AccountService {
 	
 	void delete(Integer id) throws InvalidIdException;
 
+	Account update(Integer id, Account existingAccount) throws InvalidIdException;
+
+	void updateField(Integer id, String field, Object newValue) throws InvalidIdException;
+
 }

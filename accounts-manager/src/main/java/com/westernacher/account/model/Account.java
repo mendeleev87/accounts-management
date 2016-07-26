@@ -11,25 +11,40 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name="accounts")
 public class Account implements Serializable {
 	
 	private static final long serialVersionUID = 5080561753013829589L;
+	
+	public static final String ACCOUNT_NAME_PATTERN = "[a-zA-Z]+\\s?(-{1}\\s?[a-zA-Z]+)*[a-zA-Z]*";
+	
+	public static final String ACCOUNT_EMAIL_PATTERN ="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+	        +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+	        +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
 	private Integer id;
 	
+	//Possible matches: Hans, Hans Peter, Hans-Peter, Hans - Peter, 
+	//Hans-Peter-Oliver etc.
 	@Column(name = "first_name")
+	@NotNull
+	@Pattern(regexp = ACCOUNT_NAME_PATTERN)
 	private String firstName;
 	
 	@Column(name = "last_name")
+	@NotNull
+	@Pattern(regexp = ACCOUNT_NAME_PATTERN)
 	private String lastName;
 	
 	@Column(name = "email")
+	@Pattern(regexp = ACCOUNT_EMAIL_PATTERN)
 	private String email;
 	
 	@Column(name = "date_of_birth")
@@ -129,6 +144,18 @@ public class Account implements Serializable {
 	public String toString() {
 		return "Account [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", dateOfBirth=" + dateOfBirth + "]";
+	}
+
+	public Account(String firstName, String lastName, String email, Date dateOfBirth) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Account() {
+		super();
 	}
 
 	
