@@ -1,5 +1,6 @@
 package com.westernacher.account.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,7 @@ public class SpringDataAccountService implements AccountService {
 		checkIfIdExistsOrThrow(id);
 		crud.delete(id);
 	}
-
 	
-
 	@Override
 	public Account update(Integer id, Account existingAccount) throws InvalidIdException {
 		checkIfIdExistsOrThrow(id);
@@ -40,9 +39,27 @@ public class SpringDataAccountService implements AccountService {
 	}
 
 	@Override
-	public void updateField(Integer id, String field, Object newValue) throws InvalidIdException {
+	public void updateFirstName(Integer id, String newValue) throws InvalidIdException {
 		checkIfIdExistsOrThrow(id);
-		crud.setAccountField(id, field, newValue);
+		crud.updateFirstName(id, newValue);
+	}
+	
+	@Override
+	public void updateLastName(Integer id, String newValue) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		crud.updateLastName(id, newValue);
+	}
+	
+	@Override
+	public void updateEmail(Integer id, String newValue) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		crud.updateEmail(id, newValue);
+	}
+	
+	@Override
+	public void updateDateOfBirth(Integer id, Date newValue) throws InvalidIdException {
+		checkIfIdExistsOrThrow(id);
+		crud.updateDateOfBirth(id, newValue);
 	}
 	
 	private void checkIfIdExistsOrThrow(Integer id) throws InvalidIdException {

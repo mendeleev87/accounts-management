@@ -10,7 +10,7 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 			$scope.listAccounts();
 			$scope.createAccount = function(isValid) {
 				if (isValid) {
-					$http.post('/rest/accounts/save', {
+					$http.post('/rest/accounts/new', {
 						"firstName" : $scope.firstName,
 						"lastName" : $scope.lastName,
 						"email" : $scope.email,
@@ -24,14 +24,10 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 				}
 
 			};
-			$scope.updateAccount = function(account) {
+			$scope.updateField = function(id, field, newValue) {
 
-				$http.post('/rest/accounts/save', {
-					"id" : account.id,
-					"firstName" : account.firstName,
-					"lastName" : account.lastName,
-					"email" : account.email,
-					"dateOfBirth" : account.dateOfBirth
+				$http.patch('/rest/accounts/update' + '/' + id + '/' + field, {
+					"newValue" : newValue
 				}).error(function(data, status, headers, config) {
 					console.log('Error: ', data);
 				});
@@ -47,9 +43,9 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 					console.log('Error: ', response.data);
 				});
 			};
-			$scope.updateAccountIfValid = function(account, isValid) {
+			$scope.updateFieldIfValid = function(id, field, newValue, isValid) {
 				if (isValid) {
-					$scope.updateAccount(account);
+					$scope.updateField(id, field, newValue);
 				}
 			};
 

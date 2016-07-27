@@ -48,7 +48,7 @@
 					</div>
 					<a href="#/">
 						<span class="glyphicon glyphicon-ok text-success" 
-							ng-show="editingFN" ng-click="updateAccount(a); editingFN = false"></span>
+							ng-show="editingFN" ng-click="updateField(a.id, 'firstName', a.firstName); editingFN = false"></span>
 					</a>
 					<a href="#/">
 						<span class="fa fa-ban text-danger"  
@@ -65,7 +65,7 @@
 					</div>
 					<a href="#/">
 						<span class="glyphicon glyphicon-ok text-success" 
-							ng-show="editingLN" ng-click="updateAccount(a); editingLN = false"></span>
+							ng-show="editingLN" ng-click="updateField(a.id, 'lastName', a.lastName); editingLN = false"></span>
 					</a>
 					<a href="#/">
 						<span class="fa fa-ban text-danger"  
@@ -84,7 +84,7 @@
 						<a href="#/">
 							<span type="submit" class="glyphicon glyphicon-ok text-success" 
 								ng-show="editingEmail" 
-								ng-click="updateAccountIfValid(a, emailForm.emailInput.$valid); 
+								ng-click="updateFieldIfValid(a.id, 'email', a.email, emailForm.emailInput.$valid); 
 									editingEmail = false || emailForm.emailInput.$invalid"></span>
 						</a>
 						<a href="#/">
@@ -109,7 +109,7 @@
 						<a href="#/">
 							<span class="glyphicon glyphicon-ok text-success" 
 								ng-show="editingDOB" 
-								ng-click="updateAccountIfValid(a, dateForm.dateInput.$valid); 
+								ng-click="updateFieldIfValid(a.id, 'dateOfBirth', a.dateOfBirth, dateForm.dateInput.$valid); 
 								editingDOB = false || dateForm.dateInput.$invalid"></span>
 						</a>
 						<a href="#/">

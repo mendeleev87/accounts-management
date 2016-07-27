@@ -1,5 +1,6 @@
 package com.westernacher.account.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,11 +51,32 @@ public class AccountsController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "update/{id}/{field}")
+	@RequestMapping(value = "update/{id}/firstName", method = RequestMethod.PATCH)
 	@ResponseBody
-	public void updateAccountField(@PathVariable Integer id, @PathVariable String field,
-			@RequestBody UpdateFieldDTO dto) throws InvalidIdException {
-		accountService.updateField(id, field, dto.getNewValue());
+	public void updateFirstName(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
+			throws InvalidIdException {
+		accountService.updateFirstName(id, dto.getNewValue());
+	}
+
+	@RequestMapping(value = "update/{id}/lastName", method = RequestMethod.PATCH)
+	@ResponseBody
+	public void updateLastName(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
+			throws InvalidIdException {
+		accountService.updateLastName(id, dto.getNewValue());
+	}
+
+	@RequestMapping(value = "update/{id}/email", method = RequestMethod.PATCH)
+	@ResponseBody
+	public void updateEmail(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
+			throws InvalidIdException {
+		accountService.updateEmail(id, dto.getNewValue());
+	}
+
+	@RequestMapping(value = "update/{id}/dateOfBirth", method = RequestMethod.PATCH)
+	@ResponseBody
+	public void updateDateOfBirth(@PathVariable Integer id, @RequestBody UpdateFieldDTO<Date> dto)
+			throws InvalidIdException {
+		accountService.updateDateOfBirth(id, dto.getNewValue());
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
