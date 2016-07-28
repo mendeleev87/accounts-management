@@ -72,6 +72,4 @@ public class ServiceTest {
 		accountService.delete(INVALID_ID);
 	}
 	
-	//the rest of the test cases omitted as they are essentially the same: is the id valid or not
-
 }
