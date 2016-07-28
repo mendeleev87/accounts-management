@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
@@ -72,5 +71,7 @@ public class ServiceTest {
 	public void testDeleteWithInvalidId() throws InvalidIdException {
 		accountService.delete(INVALID_ID);
 	}
+	
+	//the rest of the test cases omitted as they are essentially the same: is the id valid or not
 
 }
