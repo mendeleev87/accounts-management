@@ -9,16 +9,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import com.westernacher.account.service.AccountService;
-import com.westernacher.account.service.SpringDataAccountService;
-
 @Configuration
+@ComponentScan(basePackages = "com.westernacher.account.service")
 public class TestConfiguration {
-
-//	@Bean
-//	public AccountService getAccountService() {
-//		return new SpringDataAccountService();
-//	}
 
 	@Bean
 	public DataSource dataSource() {
