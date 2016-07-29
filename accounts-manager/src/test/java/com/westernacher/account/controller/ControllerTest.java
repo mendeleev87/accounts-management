@@ -1,9 +1,8 @@
 package com.westernacher.account.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,12 +20,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.google.gson.Gson;
 import com.westernacher.account.configuration.DatabaseConfiguration;
 import com.westernacher.account.configuration.WebConfiguration;
 import com.westernacher.account.configuration.test.TestConfiguration;
+import com.westernacher.account.dto.AccountDTO;
 import com.westernacher.account.dto.UpdateFieldDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -58,6 +59,8 @@ public class ControllerTest {
 	private UpdateFieldDTO<Long> validDateDTO = new UpdateFieldDTO<>();
 	private UpdateFieldDTO<Long> invalidDateDTO = new UpdateFieldDTO<>();
 
+	private AccountDTO accountDTO = new AccountDTO();
+
 	@Autowired
 	private Gson gson;
 
@@ -73,8 +76,26 @@ public class ControllerTest {
 		validNameDTO.setNewValue(VALID_NAME);
 		invalidNameDTO.setNewValue(INVALID_NAME);
 
-		validDateDTO.setNewValue(DATE_FORMAT.parse(VALID_DATE_STR).getTime());
-		invalidDateDTO.setNewValue(DATE_FORMAT.parse(INVALID_DATE_STR).getTime());
+		Date validDate = DATE_FORMAT.parse(VALID_DATE_STR);
+		Date invalidDate = DATE_FORMAT.parse(INVALID_DATE_STR);
+		validDateDTO.setNewValue(validDate.getTime());
+		invalidDateDTO.setNewValue(invalidDate.getTime());
+
+		accountDTO.setFirstName(VALID_NAME);
+		accountDTO.setLastName(VALID_NAME);
+		accountDTO.setEmail(VALID_EMAIL);
+		accountDTO.setDateOfBirth(validDate);
+
+	}
+
+	@Test
+	public void testAddValid() throws Exception {
+		doPost(accountDTO).andExpect(status().isOk()).andReturn();
+	}
+
+	@Test
+	public void testUpdateValid() throws Exception {
+		doPut(accountDTO, VALID_ID).andExpect(status().isOk()).andReturn();
 	}
 
 	@Test
@@ -86,41 +107,63 @@ public class ControllerTest {
 	@Test
 	public void testUpdateFirstNameValid() throws Exception {
 		String content = gson.toJson(validNameDTO);
-		mockMvc.perform(patch("/rest/accounts/update/" + VALID_ID + "/firstName").content(content)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andReturn();
+		doPatch(content, VALID_ID, "/firstName");
 	}
-	
+
 	@Test
 	public void testUpdateLastNameValid() throws Exception {
 		String content = gson.toJson(validNameDTO);
-		mockMvc.perform(patch("/rest/accounts/update/" + VALID_ID + "/lastName").content(content)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andReturn();
+		doPatch(content, VALID_ID, "/lastName");
 	}
-	
+
 	@Test
 	public void testUpdateEmailValid() throws Exception {
 		String content = gson.toJson(new UpdateFieldDTO<String>(VALID_EMAIL));
-		mockMvc.perform(patch("/rest/accounts/update/" + VALID_ID + "/email").content(content)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andReturn();
+		doPatch(content, VALID_ID, "/email");
 	}
-	
+
 	@Test
 	public void testUpdateDoBValid() throws Exception {
 		String content = gson.toJson(validDateDTO);
-		mockMvc.perform(patch("/rest/accounts/update/" + VALID_ID + "/dateOfBirth").content(content)
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andReturn();
+		doPatch(content, VALID_ID, "/dateOfBirth");
 	}
-	
-	
+
 	@Test
 	public void testDeleteWithInvalidId() throws Exception {
 		mockMvc.perform(delete("/rest/accounts/delete/" + INVALID_ID).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isGone()).andReturn();
+	}
+
+	@Test
+	public void testAddWithInvalidFirstName() throws Exception {
+		accountDTO.setFirstName(INVALID_NAME);
+		doPost(accountDTO).andExpect(status().isBadRequest()).andReturn();
+	}
+	
+	@Test
+	public void testUpdateWithInvalidFirstName() throws Exception {
+		accountDTO.setFirstName(INVALID_NAME);
+		doPut(accountDTO, VALID_ID).andExpect(status().isBadRequest()).andReturn();
+	}
+
+	private ResultActions doPost(AccountDTO accountDTO) throws Exception {
+		String content = gson.toJson(accountDTO);
+		ResultActions actions = mockMvc.perform(post("/rest/new/").content(content)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
+		return actions;
+
+	}
+
+	private void doPatch(String content, int id, String path) throws Exception {
+		mockMvc.perform(patch("/rest/accounts/update/" + id + path).content(content)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+				.andReturn();
+	}
+
+	private ResultActions doPut(AccountDTO accountDTO, int id) throws Exception {
+		String content = gson.toJson(accountDTO);
+		return mockMvc.perform(put("/rest/update/" + id).content(content).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
 	}
 
 }
