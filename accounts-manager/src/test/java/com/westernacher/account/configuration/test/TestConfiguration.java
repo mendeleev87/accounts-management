@@ -9,6 +9,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import com.google.gson.Gson;
+
 @Configuration
 @ComponentScan(basePackages = "com.westernacher.account.service")
 public class TestConfiguration {
@@ -19,6 +21,11 @@ public class TestConfiguration {
 		EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2).addScript("classpath:accounts.sql")
 				.addScript("classpath:sample_data.sql").build();
 		return db;
+	}
+	
+	@Bean 
+	public Gson gson() {
+		return new Gson();
 	}
 
 }

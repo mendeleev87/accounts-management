@@ -12,4 +12,13 @@ public class UpdateFieldDTO<T> {
 		this.newValue = newValue;
 	}
 
+	public UpdateFieldDTO(T newValue) {
+		super();
+		this.newValue = newValue;
+	}
+
+	public UpdateFieldDTO() {
+		super();
+	}
+
 }
