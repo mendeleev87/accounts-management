@@ -37,14 +37,14 @@
 				</th>
 				<th></th>
 			</tr>
-			<tr ng-repeat="a in accounts | orderBy:sortType:sortReverse">
+			<tr ng-repeat="a in accounts | orderBy:sortType:sortReverse" shadow="a">
 				<td>
 					<span ng-bind="a.id"></span>
 				</td>
 				<td>
 					<form name="fNameForm">
 						<a href="#/">
-							<span class="col-xs-8 text-info unstyled" ng-click="editingFN = true; $scope.temp = a.firstName" 
+							<span class="col-xs-8 text-info unstyled" ng-click="editingFN = true; saveTempModel(a)" 
 								ng-hide="editingFN" ng-bind="a.firstName"></span> 
 						</a>
 						<div class="col-xs-8" ng-show="editingFN">
@@ -59,13 +59,13 @@
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingFN && !editingRow" 
-								ng-click="editingFN = false; a.firstName = $scope.temp"></span>
+								ng-click="editingFN = false; resetModel(a)"></span>
 						</a>
 				</td>
 				<td>
 					<form name="lNameForm">
 						<a href="#/">
-							<span class="col-xs-8 text-info unstyled" ng-click="editingLN = true; $scope.temp = a.lastName" 
+							<span class="col-xs-8 text-info unstyled" ng-click="editingLN = true; saveTempModel(a)" 
 								ng-hide="editingLN" ng-bind="a.lastName"></span> 
 						</a>
 						<div class="col-xs-8" ng-show="editingLN">
@@ -80,14 +80,14 @@
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingLN && !editingRow" 
-								ng-click="editingLN = false; a.lastName = $scope.temp"></span>
+								ng-click="editingLN = false; resetModel(a)"></span>
 						</a>
 					</form>
 				</td>
 				<td>
 					<form name="emailForm">
 						<a href="#/">
-							<span class="col-xs-8 text-info unstyled" ng-click="editingEmail = true; $scope.temp = a.email" 
+							<span class="col-xs-8 text-info unstyled" ng-click="editingEmail = true; saveTempModel(a)" 
 								ng-hide="editingEmail" ng-bind="a.email"></span> 
 						</a>
 						<div class="col-xs-8" ng-show="editingEmail">
@@ -103,7 +103,7 @@
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingEmail && !editingRow" 
-								ng-click="editingEmail = false; a.email = $scope.temp"></span>
+								ng-click="editingEmail = false; resetModel(a)"></span>
 						</a>
 						<div class="alert alert-warning" ng-show="editingEmail && emailForm.emailInput.$invalid">
 							<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -114,7 +114,7 @@
 				<td>
 					<form name="dateForm">
 						<a href="#/">
-							<span class="col-xs-8 text-info unstyled" ng-click="editingDOB = true; $scope.temp = a.dateOfBirth" 
+							<span class="col-xs-8 text-info unstyled" ng-click="editingDOB = true; saveTempModel(a)" 
 								ng-hide="editingDOB" ng-bind="a.dateOfBirth | date:'dd/MM/yyyy'"></span> 
 						</a>
 						<div class="col-xs-8" ng-show="editingDOB">
@@ -129,7 +129,7 @@
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingDOB && !editingRow" 
-								ng-click="editingDOB = false; a.dateOfBirth = $scope.temp"></span>
+								ng-click="editingDOB = false; resetModel(a)"></span>
 						</a>
 						<div class="alert alert-warning" ng-show="editingDOB && dateForm.dateInput.$invalid">
 							<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -142,24 +142,26 @@
 					<a href="#/">
 						<span class="glyphicon glyphicon-ok text-success" 
 							ng-show="editingRow" 
-							ng-click="updateAccount(
-									lNameForm.lNameInput.$valid
-									&& fNameForm.fNameInput.$valid
-									&& emailForm.emailInput.$valid 
-									&& dateForm.dateInput.$valid); $scope.temp = JSON.parse(JSON.stringify(a))">
+							ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = false;
+							 updateAccount(a, 
+								lNameForm.lNameInput.$invalid &&
+								lNameForm.lNameInput.$invalid &&
+								emailForm.emailInput.$invalid &&
+								dateForm.dateInput.$invalid)">
 						</span>
 					</a>
 					<a href="#/">
 						<span class="fa fa-ban text-danger"  
 							ng-show="editingRow" 
 							ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = false;
-								resetModel()">
+								resetModel(a)">
 						</span>
 					</a>
 					<a href="#/">
 						<span class="glyphicon glyphicon-pencil" 
 						ng-show="!editingRow"
 						ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = true;
+							saveTempModel(a)
 							"></span>
 					</a>
 					<a href="#/">

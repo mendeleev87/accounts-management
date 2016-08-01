@@ -81,3 +81,4 @@ accountDirectives.directive('nameValidate', function() {
         }
     };
 });
+

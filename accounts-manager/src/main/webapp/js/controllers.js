@@ -2,6 +2,8 @@ var accountControllers = angular.module('accountControllers', []);
 
 accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 		function($scope, $http) {
+			$scope.tempAccount = new Object();
+			$scope.dummy = new Object();
 			$scope.listAccounts = function() {
 				$http.get("/rest/accounts").then(function(response) {
 					$scope.accounts = response.data;
@@ -10,7 +12,7 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 			$scope.listAccounts();
 			$scope.createAccount = function(isValid) {
 				if (isValid) {
-					$http.post('/rest/accounts/update/' + $scope.id, {
+					$http.post('/rest/accounts/new', {
 						"firstName" : $scope.firstName,
 						"lastName" : $scope.lastName,
 						"email" : $scope.email,
@@ -24,22 +26,21 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 				}
 
 			};
-			$scope.updateAccount = function(isValid) {
-				if (isValid) {
+			$scope.updateAccount = function(account, isInvalid) {
+				if (!isInvalid) {
 					
-					$http.put('/rest/accounts/new', {
-						"firstName" : $scope.firstName,
-						"lastName" : $scope.lastName,
-						"email" : $scope.email,
-						"dateOfBirth" : $scope.dateOfBirth
+					$http.put('/rest/accounts/update/' + account.id, {
+						"firstName" : account.firstName,
+						"lastName" : account.lastName,
+						"email" : account.email,
+						"dateOfBirth" : account.dateOfBirth
 					}).success(function(data, status, headers, config) {
-						$scope.clearModel();
 						$scope.accounts.push(data);
 					}).error(function(data, status, headers, config) {
 						console.log('error: data = ', data);
 					});
 				}
-
+				return !isInvalid;
 			};
 			$scope.updateField = function(id, field, newValue) {
 
@@ -79,11 +80,15 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 				
 			};
 			
-			$scope.resetModel = function() {
-				$scope.firstName = $scope.temp.firstName;
-				$scope.lastName = $scope.temp.lastName;
-				$scope.email = $scope.temp.email;
-				$scope.dateOfBirth = $scope.temp.dateOfBirth;
+			$scope.saveTempModel = function(account) {
+				$scope.tempAccount = angular.copy(account);
+			}
+			
+			$scope.resetModel = function(account) {
+				account.firstName = $scope.tempAccount.firstName;
+				account.lastName = $scope.tempAccount.lastName;
+				account.email = $scope.tempAccount.email;
+				account.dateOfBirth = $scope.tempAccount.dateOfBirth;
 			};
 
 		} ]);
