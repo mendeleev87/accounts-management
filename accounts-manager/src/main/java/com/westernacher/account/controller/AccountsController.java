@@ -51,28 +51,28 @@ public class AccountsController {
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "update/{id}/firstName", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/update/{id}/firstName", method = RequestMethod.PATCH)
 	@ResponseBody
 	public void updateFirstName(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
 			throws InvalidIdException {
 		accountService.updateFirstName(id, dto.getNewValue());
 	}
 
-	@RequestMapping(value = "update/{id}/lastName", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/update/{id}/lastName", method = RequestMethod.PATCH)
 	@ResponseBody
 	public void updateLastName(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
 			throws InvalidIdException {
 		accountService.updateLastName(id, dto.getNewValue());
 	}
 
-	@RequestMapping(value = "update/{id}/email", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/update/{id}/email", method = RequestMethod.PATCH)
 	@ResponseBody
 	public void updateEmail(@PathVariable Integer id, @RequestBody UpdateFieldDTO<String> dto)
 			throws InvalidIdException {
 		accountService.updateEmail(id, dto.getNewValue());
 	}
 
-	@RequestMapping(value = "update/{id}/dateOfBirth", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/update/{id}/dateOfBirth", method = RequestMethod.PATCH)
 	@ResponseBody
 	public void updateDateOfBirth(@PathVariable Integer id, @RequestBody UpdateFieldDTO<Date> dto)
 			throws InvalidIdException {

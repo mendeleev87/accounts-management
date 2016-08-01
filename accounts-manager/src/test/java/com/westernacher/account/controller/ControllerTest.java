@@ -1,8 +1,11 @@
 package com.westernacher.account.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,7 +22,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -56,10 +58,14 @@ public class ControllerTest {
 
 	private UpdateFieldDTO<String> validNameDTO = new UpdateFieldDTO<>();
 	private UpdateFieldDTO<String> invalidNameDTO = new UpdateFieldDTO<>();
-	private UpdateFieldDTO<Long> validDateDTO = new UpdateFieldDTO<>();
-	private UpdateFieldDTO<Long> invalidDateDTO = new UpdateFieldDTO<>();
+	private UpdateFieldDTO<Date> validDateDTO = new UpdateFieldDTO<>();
+	private UpdateFieldDTO<Date> invalidDateDTO = new UpdateFieldDTO<>();
 
 	private AccountDTO accountDTO = new AccountDTO();
+	
+	private Date invalidDate;
+	
+	private Date validDate;
 
 	@Autowired
 	private Gson gson;
@@ -76,10 +82,10 @@ public class ControllerTest {
 		validNameDTO.setNewValue(VALID_NAME);
 		invalidNameDTO.setNewValue(INVALID_NAME);
 
-		Date validDate = DATE_FORMAT.parse(VALID_DATE_STR);
-		Date invalidDate = DATE_FORMAT.parse(INVALID_DATE_STR);
-		validDateDTO.setNewValue(validDate.getTime());
-		invalidDateDTO.setNewValue(invalidDate.getTime());
+		validDate = DATE_FORMAT.parse(VALID_DATE_STR);
+		invalidDate = DATE_FORMAT.parse(INVALID_DATE_STR);
+		validDateDTO.setNewValue(validDate);
+		invalidDateDTO.setNewValue(invalidDate);
 
 		accountDTO.setFirstName(VALID_NAME);
 		accountDTO.setLastName(VALID_NAME);
@@ -87,15 +93,23 @@ public class ControllerTest {
 		accountDTO.setDateOfBirth(validDate);
 
 	}
+	
+	@Test
+	public void testFindAll() throws Exception {
+		mockMvc.perform(get("/rest/accounts").accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk()).andReturn();
+	}
 
 	@Test
 	public void testAddValid() throws Exception {
-		doPost(accountDTO).andExpect(status().isOk()).andReturn();
+		doPost(accountDTO).andExpect(status().isCreated()).andReturn();
 	}
 
 	@Test
 	public void testUpdateValid() throws Exception {
-		doPut(accountDTO, VALID_ID).andExpect(status().isOk()).andReturn();
+		doPut(accountDTO, VALID_ID)
+		.andExpect(status().isOk())
+		.andReturn();
 	}
 
 	@Test
@@ -141,14 +155,43 @@ public class ControllerTest {
 	}
 	
 	@Test
+	public void testAddWithInvalidLastName() throws Exception {
+		accountDTO.setLastName(null);
+		doPost(accountDTO).andExpect(status().isBadRequest()).andReturn();
+	}
+	
+	@Test
+	public void testAddWithInvalidEmail() throws Exception {
+		accountDTO.setEmail("");
+		doPost(accountDTO).andExpect(status().isBadRequest()).andReturn();
+	}
+	
+	@Test
+	public void testUpdateWithInvalidId() throws Exception {
+		doPut(accountDTO, INVALID_ID).andExpect(status().isGone()).andReturn();
+	}
+	
+	@Test
 	public void testUpdateWithInvalidFirstName() throws Exception {
 		accountDTO.setFirstName(INVALID_NAME);
+		doPut(accountDTO, VALID_ID).andExpect(status().isBadRequest()).andReturn();
+	}
+	
+	@Test
+	public void testUpdateWithInvalidEmail() throws Exception {
+		accountDTO.setEmail(INVALID_EMAIL);
+		doPut(accountDTO, VALID_ID).andExpect(status().isBadRequest()).andReturn();
+	}
+	
+	@Test
+	public void testUpdateWithInvalidDoB() throws Exception {
+		accountDTO.setDateOfBirth(invalidDate);
 		doPut(accountDTO, VALID_ID).andExpect(status().isBadRequest()).andReturn();
 	}
 
 	private ResultActions doPost(AccountDTO accountDTO) throws Exception {
 		String content = gson.toJson(accountDTO);
-		ResultActions actions = mockMvc.perform(post("/rest/new/").content(content)
+		ResultActions actions = mockMvc.perform(post("/rest/accounts/new/").content(content)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
 		return actions;
 
@@ -162,7 +205,7 @@ public class ControllerTest {
 
 	private ResultActions doPut(AccountDTO accountDTO, int id) throws Exception {
 		String content = gson.toJson(accountDTO);
-		return mockMvc.perform(put("/rest/update/" + id).content(content).contentType(MediaType.APPLICATION_JSON)
+		return mockMvc.perform(put("/rest/accounts/update/" + id).content(content).contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
 	}
 

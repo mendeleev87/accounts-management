@@ -55,6 +55,11 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 				$scope.lastName = '';
 				$scope.email = '';
 				$scope.dateOfBirth = moment();
+				
+				$scope.newAccFNameForm.newAccountFNameInput.$setPristine();
+				$scope.newAccLNameForm.newAccountLNameInput.$setPristine();
+				$scope.newAccEmailForm.newAccountEmailInput.$setPristine();
+				
 			};
 
 		} ]);

@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Configuration
 @ComponentScan(basePackages = "com.westernacher.account.service")
@@ -25,7 +26,7 @@ public class TestConfiguration {
 	
 	@Bean 
 	public Gson gson() {
-		return new Gson();
+		return (new GsonBuilder()).setDateFormat("yyyy-MM-dd").create();
 	}
 
 }
