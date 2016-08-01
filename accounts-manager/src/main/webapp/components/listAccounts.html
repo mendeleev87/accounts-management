@@ -29,7 +29,7 @@
 	       				<span ng-show="sortType == 'a.email' && sortReverse" class="fa fa-caret-up"></span>
 					</a>
 				</th>
-				<th>
+				<th class="col-xs-3">
 					<a href="#/" ng-click="sortType = 'a.dateOfBirth'; sortReverse = !sortReverse">Date of Birth
 						<span ng-show="sortType == 'a.dateOfBirth' && !sortReverse" class="fa fa-caret-down"></span>
 	       				<span ng-show="sortType == 'a.dateOfBirth' && sortReverse" class="fa fa-caret-up"></span>
@@ -42,38 +42,47 @@
 					<span ng-bind="a.id"></span>
 				</td>
 				<td>
-					<a href="#/">
-						<span class="col-xs-8 text-info unstyled" ng-click="editingFN = true; $scope.temp = a.firstName" 
-							ng-hide="editingFN" ng-bind="a.firstName"></span> 
-					</a>
-					<div class="col-xs-8" ng-show="editingFN">
-						<input class="form-control" ng-model="a.firstName"  />
-					</div>
-					<a href="#/">
-						<span class="glyphicon glyphicon-ok text-success" 
-							ng-show="editingFN" ng-click="updateField(a.id, 'firstName', a.firstName); editingFN = false"></span>
-					</a>
-					<a href="#/">
-						<span class="fa fa-ban text-danger"  
-							ng-show="editingFN" ng-click="editingFN = false; a.firstName = $scope.temp"></span>
-					</a>
+					<form name="fNameForm">
+						<a href="#/">
+							<span class="col-xs-8 text-info unstyled" ng-click="editingFN = true; $scope.temp = a.firstName" 
+								ng-hide="editingFN" ng-bind="a.firstName"></span> 
+						</a>
+						<div class="col-xs-8" ng-show="editingFN">
+							<input name="fNameInput" class="form-control" ng-model="a.firstName" 
+								mandatory-validate name-validate  />
+						</div>
+						<a href="#/">
+							<span class="glyphicon glyphicon-ok text-success" 
+								ng-show="editingFN && !editingRow" 
+								ng-click="updateField(a.id, 'firstName', a.firstName); editingFN = false"></span>
+						</a>
+						<a href="#/">
+							<span class="fa fa-ban text-danger"  
+								ng-show="editingFN && !editingRow" 
+								ng-click="editingFN = false; a.firstName = $scope.temp"></span>
+						</a>
 				</td>
 				<td>
-					<a href="#/">
-						<span class="col-xs-8 text-info unstyled" ng-click="editingLN = true; $scope.temp = a.lastName" 
-							ng-hide="editingLN" ng-bind="a.lastName"></span> 
-					</a>
-					<div class="col-xs-8" ng-show="editingLN">
-						<input class="form-control" ng-model="a.lastName"  />
-					</div>
-					<a href="#/">
-						<span class="glyphicon glyphicon-ok text-success" 
-							ng-show="editingLN" ng-click="updateField(a.id, 'lastName', a.lastName); editingLN = false"></span>
-					</a>
-					<a href="#/">
-						<span class="fa fa-ban text-danger"  
-							ng-show="editingLN" ng-click="editingLN = false; a.lastName = $scope.temp"></span>
-					</a>
+					<form name="lNameForm">
+						<a href="#/">
+							<span class="col-xs-8 text-info unstyled" ng-click="editingLN = true; $scope.temp = a.lastName" 
+								ng-hide="editingLN" ng-bind="a.lastName"></span> 
+						</a>
+						<div class="col-xs-8" ng-show="editingLN">
+							<input name="lNameInput" class="form-control" ng-model="a.lastName" 
+								mandatory-validate name-validate />
+						</div>
+						<a href="#/">
+							<span class="glyphicon glyphicon-ok text-success" 
+								ng-show="editingLN && !editingRow" 
+								ng-click="updateField(a.id, 'lastName', a.lastName); editingLN = false"></span>
+						</a>
+						<a href="#/">
+							<span class="fa fa-ban text-danger"  
+								ng-show="editingLN && !editingRow" 
+								ng-click="editingLN = false; a.lastName = $scope.temp"></span>
+						</a>
+					</form>
 				</td>
 				<td>
 					<form name="emailForm">
@@ -82,17 +91,19 @@
 								ng-hide="editingEmail" ng-bind="a.email"></span> 
 						</a>
 						<div class="col-xs-8" ng-show="editingEmail">
-							<input name="emailInput" type=email class="form-control" ng-model="a.email" novalidate/>
+							<input name="emailInput" type=email class="form-control" ng-model="a.email" 
+									mandatory-validate novalidate/>
 						</div>
 						<a href="#/">
 							<span type="submit" class="glyphicon glyphicon-ok text-success" 
-								ng-show="editingEmail" 
+								ng-show="editingEmail && !editingRow" 
 								ng-click="updateFieldIfValid(a.id, 'email', a.email, emailForm.emailInput.$valid); 
 									editingEmail = false || emailForm.emailInput.$invalid"></span>
 						</a>
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
-								ng-show="editingEmail" ng-click="editingEmail = false; a.email = $scope.temp"></span>
+								ng-show="editingEmail && !editingRow" 
+								ng-click="editingEmail = false; a.email = $scope.temp"></span>
 						</a>
 						<div class="alert alert-warning" ng-show="editingEmail && emailForm.emailInput.$invalid">
 							<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -111,13 +122,14 @@
 						</div>
 						<a href="#/">
 							<span class="glyphicon glyphicon-ok text-success" 
-								ng-show="editingDOB" 
+								ng-show="editingDOB && !editingRow" 
 								ng-click="updateFieldIfValid(a.id, 'dateOfBirth', a.dateOfBirth, dateForm.dateInput.$valid); 
 								editingDOB = false || dateForm.dateInput.$invalid"></span>
 						</a>
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
-								ng-show="editingDOB" ng-click="editingDOB = false; a.dateOfBirth = $scope.temp"></span>
+								ng-show="editingDOB && !editingRow" 
+								ng-click="editingDOB = false; a.dateOfBirth = $scope.temp"></span>
 						</a>
 						<div class="alert alert-warning" ng-show="editingDOB && dateForm.dateInput.$invalid">
 							<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -127,8 +139,32 @@
 				</td>
 				
 				<td>
-					<a href="#/"><span class="glyphicon glyphicon-pencil" ></span></a>
-					<a href="#/"><span class="fa fa-trash text-danger" ng-click="deleteAccount(a.id)"></span></a>
+					<a href="#/">
+						<span class="glyphicon glyphicon-ok text-success" 
+							ng-show="editingRow" 
+							ng-click="updateAccount(
+									lNameForm.lNameInput.$valid
+									&& fNameForm.fNameInput.$valid
+									&& emailForm.emailInput.$valid 
+									&& dateForm.dateInput.$valid); $scope.temp = JSON.parse(JSON.stringify(a))">
+						</span>
+					</a>
+					<a href="#/">
+						<span class="fa fa-ban text-danger"  
+							ng-show="editingRow" 
+							ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = false;
+								resetModel()">
+						</span>
+					</a>
+					<a href="#/">
+						<span class="glyphicon glyphicon-pencil" 
+						ng-show="!editingRow"
+						ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = true;
+							"></span>
+					</a>
+					<a href="#/">
+						<span class="fa fa-trash text-danger" ng-show="!editingRow" ng-click="deleteAccount(a.id)"></span>
+					</a>
 				</td>
 			</tr>
 			<tr>
@@ -183,8 +219,12 @@
 				<td class="col-xs-1">
 					<a href="#/">
 							<span class="glyphicon glyphicon-ok text-success" 
-								ng-click="createAccount(newAccEmailForm.newAccountEmailInput.$valid 
-									&& newAccDateForm.newAccountDateInput.$valid)"></span>
+								ng-click="createAccount(
+									newAccFNameForm.newAccountFNameInput.$valid
+									&& newAccLNameForm.newAccountLNameInput.$valid
+									&& newAccEmailForm.newAccountEmailInput.$valid 
+									&& newAccDateForm.newAccountDateInput.$valid)">
+							</span>
 					</a>
 					<a href="#/"><span class="fa fa-undo text-danger" ng-click="clearModel()"></span></a>
 				</td>
@@ -198,3 +238,6 @@
 		<span>Mandatory field</span>
 	</div>
 </div>
+
+<!-- 								ng-click="updateFieldIfValid(a.id, 'dateOfBirth', a.dateOfBirth, dateForm.dateInput.$valid); 
+								editingDOB = false || dateForm.dateInput.$invalid"> -->

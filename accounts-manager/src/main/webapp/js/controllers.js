@@ -10,7 +10,24 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 			$scope.listAccounts();
 			$scope.createAccount = function(isValid) {
 				if (isValid) {
-					$http.post('/rest/accounts/new', {
+					$http.post('/rest/accounts/update/' + $scope.id, {
+						"firstName" : $scope.firstName,
+						"lastName" : $scope.lastName,
+						"email" : $scope.email,
+						"dateOfBirth" : $scope.dateOfBirth
+					}).success(function(data, status, headers, config) {
+						$scope.clearModel();
+						$scope.accounts.push(data);
+					}).error(function(data, status, headers, config) {
+						console.log('error: data = ', data);
+					});
+				}
+
+			};
+			$scope.updateAccount = function(isValid) {
+				if (isValid) {
+					
+					$http.put('/rest/accounts/new', {
 						"firstName" : $scope.firstName,
 						"lastName" : $scope.lastName,
 						"email" : $scope.email,
@@ -60,6 +77,13 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 				$scope.newAccLNameForm.newAccountLNameInput.$setPristine();
 				$scope.newAccEmailForm.newAccountEmailInput.$setPristine();
 				
+			};
+			
+			$scope.resetModel = function() {
+				$scope.firstName = $scope.temp.firstName;
+				$scope.lastName = $scope.temp.lastName;
+				$scope.email = $scope.temp.email;
+				$scope.dateOfBirth = $scope.temp.dateOfBirth;
 			};
 
 		} ]);
