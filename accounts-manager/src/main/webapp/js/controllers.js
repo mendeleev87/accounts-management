@@ -35,12 +35,11 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 						"email" : account.email,
 						"dateOfBirth" : account.dateOfBirth
 					}).success(function(data, status, headers, config) {
-						$scope.accounts.push(data);
+					
 					}).error(function(data, status, headers, config) {
 						console.log('error: data = ', data);
 					});
 				}
-				return !isInvalid;
 			};
 			$scope.updateField = function(id, field, newValue) {
 
@@ -52,13 +51,10 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 
 			};
 			$scope.deleteAccount = function(id) {
-				$http({
-					method : 'DELETE',
-					url : '/rest/accounts/delete/' + id
-				}).then(function successCallback(response) {
+				$http.delete('/rest/accounts/delete/' + id).success(function(response) {
 					$scope.listAccounts();
-				}, function errorCallback(response) {
-					console.log('Error: ', response.data);
+				}).error(function errorCallback(response) {
+					console.log('Error: ', response);
 				});
 			};
 			$scope.updateFieldIfValid = function(id, field, newValue, isValid) {

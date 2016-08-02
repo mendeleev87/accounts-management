@@ -9,7 +9,7 @@ accountDirectives.directive('dateFilter', function() {
 		      });
 
 		      ngModelController.$formatters.push(function(data) {
-		    	 return moment(data).format('DD/MM/YYYY');
+		    	 return data == null ? '' : moment(data).format('DD/MM/YYYY');
 		      });
 		    }
 		  }
@@ -22,14 +22,14 @@ accountDirectives.directive('dateValidate', function() {
             
             ctrl.$parsers.push(function(value) {
             	var formDate = moment(value, 'DD/MM/YYYY', true);
-            	var valid = (formDate.isValid() && formDate.isBefore(moment()) )|| value == '';
+            	var valid = value == '' || (formDate.isValid() && formDate.isBefore(moment()) );
             	ctrl.$setValidity('dateValidate', valid);
                 return valid ? value : undefined;
             });
             
             ctrl.$formatters.push(function(value) {
             	var formDate = moment(value, 'DD/MM/YYYY', true);
-            	var valid = (formDate.isValid() && formDate.isBefore(moment()) )|| value == '';
+            	var valid = value == '' || (formDate.isValid() && formDate.isBefore(moment()) );
                 ctrl.$setValidity('dateValidate', valid);
                 return value;
             });
@@ -62,10 +62,10 @@ accountDirectives.directive('nameValidate', function() {
     return {
         require: 'ngModel',
         link: function(scope, elem, attr, ctrl) {
-            var regex = '[a-zA-Z]+(\s?-{1}\s?[a-zA-Z]+)*(\s?[a-zA-Z]+)*';
+            var regex = /^[a-zA-Z '-]+$/;
             ctrl.$parsers.push(function(value) {
             	if (value != undefined) {
-	            	var valid =  value.match(regex);
+	            	var valid =  regex.test(value);
 	                ctrl.$setValidity('nameValidate', valid);
             	}
                 return valid ? value : undefined;
@@ -73,7 +73,7 @@ accountDirectives.directive('nameValidate', function() {
             
             ctrl.$formatters.push(function(value) {
             	if (value != undefined) {
-	            	var valid = value.match(regex);
+            		var valid =  regex.test(value);
 	                ctrl.$setValidity('nameValidate', valid);
             	}
                 return value;

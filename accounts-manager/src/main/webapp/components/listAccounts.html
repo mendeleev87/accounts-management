@@ -54,13 +54,19 @@
 						<a href="#/">
 							<span class="glyphicon glyphicon-ok text-success" 
 								ng-show="editingFN && !editingRow" 
-								ng-click="updateField(a.id, 'firstName', a.firstName); editingFN = false"></span>
+								ng-click="updateFieldIfValid(a.id, 'firstName', a.firstName, fNameForm.fNameInput.$valid); 
+									editingFN = false || fNameForm.fNameInput.$invalid"></span>
 						</a>
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingFN && !editingRow" 
 								ng-click="editingFN = false; resetModel(a)"></span>
 						</a>
+						<div class="alert alert-warning" ng-show="editingFN &&  fNameForm.fNameInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid name!
+						</div>
+					</form>
 				</td>
 				<td>
 					<form name="lNameForm">
@@ -75,13 +81,18 @@
 						<a href="#/">
 							<span class="glyphicon glyphicon-ok text-success" 
 								ng-show="editingLN && !editingRow" 
-								ng-click="updateField(a.id, 'lastName', a.lastName); editingLN = false"></span>
+								ng-click="updateFieldIfValid(a.id, 'lastName', a.lastName, lNameForm.lNameInput.$valid); 
+									editingLN = false || lNameForm.lNameInput.$invalid"></span>
 						</a>
 						<a href="#/">
 							<span class="fa fa-ban text-danger"  
 								ng-show="editingLN && !editingRow" 
 								ng-click="editingLN = false; resetModel(a)"></span>
 						</a>
+						<div class="alert alert-warning" ng-show="editingLN &&  lNameForm.lNameInput.$invalid">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							Please enter a valid name!
+						</div>
 					</form>
 				</td>
 				<td>
@@ -142,12 +153,15 @@
 					<a href="#/">
 						<span class="glyphicon glyphicon-ok text-success" 
 							ng-show="editingRow" 
-							ng-click="editingRow = editingFN = editingLN = editingEmail = editingDOB = false;
-							 updateAccount(a, 
-								lNameForm.lNameInput.$invalid &&
-								lNameForm.lNameInput.$invalid &&
-								emailForm.emailInput.$invalid &&
-								dateForm.dateInput.$invalid)">
+							ng-click="
+								updateAccount(a, fNameForm.fNameInput.$invalid ||
+									lNameForm.lNameInput.$invalid ||
+									emailForm.emailInput.$invalid ||
+									dateForm.dateInput.$invalid);
+								editingRow = editingFN = editingLN = editingEmail = editingDOB 
+									= false || fNameForm.fNameInput.$invalid || 
+									lNameForm.lNameInput.$invalid || emailForm.emailInput.$invalid ||
+									dateForm.dateInput.$invalid">
 						</span>
 					</a>
 					<a href="#/">
@@ -240,6 +254,3 @@
 		<span>Mandatory field</span>
 	</div>
 </div>
-
-<!-- 								ng-click="updateFieldIfValid(a.id, 'dateOfBirth', a.dateOfBirth, dateForm.dateInput.$valid); 
-								editingDOB = false || dateForm.dateInput.$invalid"> -->

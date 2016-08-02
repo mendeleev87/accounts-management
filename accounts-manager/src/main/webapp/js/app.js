@@ -1,5 +1,6 @@
 var accountApp = angular.module('accountApp',
-		[ 'ngRoute', 'accountControllers', 'accountDirectives']);
+		[ 'ngRoute', 'ngCookies', 'accountControllers', 'accountDirectives' ])
+
 
 accountApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
