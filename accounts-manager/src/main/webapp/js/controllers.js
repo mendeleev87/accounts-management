@@ -51,9 +51,12 @@ accountControllers.controller('ListAccountsCtrl', [ '$scope', '$http',
 
 			};
 			$scope.deleteAccount = function(id) {
-				$http.delete('/rest/accounts/delete/' + id).success(function(response) {
+				$http({
+					method : 'DELETE',
+					url : '/rest/accounts/delete/' + id
+				}).then(function successCallback(response) {
 					$scope.listAccounts();
-				}).error(function errorCallback(response) {
+				}, function errorCallback(response) {
 					console.log('Error: ', response);
 				});
 			};
